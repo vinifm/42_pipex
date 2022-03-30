@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/03/29 17:00:08 by viferrei         ###   ########.fr        #
+#    Updated: 2022/03/30 18:08:00 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,13 @@ SRCDIR	= ./srcs/
 OBJDIR	= ./objs/
 
 SRC		= pipex.c
-OBJ		= = $(addprefix $(OBJDIR), $(notdir $(SRC:.c=.o)))
+OBJ		= $(addprefix $(OBJDIR), $(notdir $(SRC:.c=.o)))
 
 all: $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
-	$(CC) $(CFLAGS) -c -I ./include $(SRC)
+	mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -I ./include -c $< -o $@
 
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
