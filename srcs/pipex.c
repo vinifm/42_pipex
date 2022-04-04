@@ -6,15 +6,15 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/01 18:09:40 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/04 17:53:18 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-static int	open_file(char *path, int mode);
+static int	open_file(char *file, int mode);
 
-/* dup2 redirects stdin (fd == 1) and stdout (fd == 2) to infile and outfile */
+/* dup2 redirects stdin (fd == 0) and stdout (fd == 1) to infile and outfile */
 int	main(int argc, char **argv)
 {
 	int	infile;
@@ -30,9 +30,9 @@ int	main(int argc, char **argv)
 		outfile = open_file(argv[argc - 1], WRITE);
 		if (infile == -1 || outfile == -1)
 			perror_exit("open_file:");
-		dup2(infile, 1);
-		dup2(outfile, 2);
-		read_command(argv[i++]);
+		//dup2(infile, STDIN_FILENO);
+		//dup2(outfile, STDOUT_FILENO);
+		pipe_and_fork(argv[i++]);
 	}
 	return (0);
 }
@@ -42,22 +42,25 @@ int	main(int argc, char **argv)
 	opened with writing permission or created with 0777 permissions if
 	nonexistent (O_CREAT).
 */
-static int	open_file(char *path, int mode)
+static int	open_file(char *file, int mode)
 {
 	if (mode == READ)
 	{
-		if(access(path, F_OK))
+		if(access(file, F_OK))
 			perror_exit("input file");
-		return (open(path, O_RDONLY));
+		return (open(file, O_RDONLY));
 	}
 	else if (mode == WRITE)
-		return (open(path, O_WRONLY | O_CREAT, 0777));
+		return (open(file, O_WRONLY | O_CREAT, 0777));
 	return(-1);
 }
 
-/* read_command:
+/*	pipe_and_fork: Create a pipe and fork the process. On the parent process,
+	close the read end of the pipe and redirect STDOUT to the writing end. On
+	the child process, close the writing end and redirect STDIN to the reading
+	end.
 */
-void	read_command(char *command)
+void	pipe_and_fork(char *command)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -67,20 +70,26 @@ void	read_command(char *command)
 	pid = fork();
 	if (pid == -1)
 		perror_exit("fork in read_command");
-	if (pid == 0)
+	if (pid > 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], 1);
-		waitpid(-1, NULL, WNOHANG); // why?
+		dup2(fd[1], STDOUT_FILENO);
+		waitpid(-1, NULL, WNOHANG);
 	}
 	else
 	{
 		close(fd[1]);
-		dup2(fd[0], 0);
-
+		dup2(fd[0], STDIN_FILENO);
+		parse_command(command);
 	}
+}
 
+/*	parse_command:
+*/
 
+void	parse_command(char *command)
+{
+	printf("command: %s\n", command);
 }
 
 void	perror_exit(char *error_msg)
