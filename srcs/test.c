@@ -6,11 +6,11 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 17:19:57 by viferrei          #+#    #+#             */
-/*   Updated: 2022/03/23 16:59:57 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/05 17:31:00 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "../pipex.h"
 
 int main(void)
 {

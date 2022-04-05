@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/04 17:53:18 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/05 18:32:44 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	main(int argc, char **argv)
 			perror_exit("open_file:");
 		//dup2(infile, STDIN_FILENO);
 		//dup2(outfile, STDOUT_FILENO);
-		pipe_and_fork(argv[i++]);
+		pipe_and_fork(argv[i]);
 	}
 	return (0);
 }
@@ -70,17 +70,17 @@ void	pipe_and_fork(char *command)
 	pid = fork();
 	if (pid == -1)
 		perror_exit("fork in read_command");
-	if (pid > 0)
+	if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		waitpid(-1, NULL, WNOHANG);
+		//dup2(fd[1], STDOUT_FILENO);
+		parse_command(command);
 	}
 	else
 	{
 		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		parse_command(command);
+		//dup2(fd[0], STDIN_FILENO);
+		waitpid(-1, NULL, WNOHANG);
 	}
 }
 

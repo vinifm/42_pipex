@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/04 17:42:53 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/05 18:05:06 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 
 # define READ	0
 # define WRITE	1
+
+// STRUCTS
+
+typedef struct	s_pipe
+{
+
+}				t_pipe;
 
 // pipex.c
 void	pipe_and_fork(char *command);
