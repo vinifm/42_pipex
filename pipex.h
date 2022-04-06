@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/05 18:05:06 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/06 18:24:12 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ typedef struct	s_pipe
 }				t_pipe;
 
 // pipex.c
-void	pipe_and_fork(char *command);
+void	pipe_and_fork(char *command, char **envp);
 void	perror_exit(char *error_msg);
-void	parse_command(char *command);
+void	exec_cmd(char *command, char **envp);
+char	*get_cmd_path(char *command, char **envp);
 
 #endif
