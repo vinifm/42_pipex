@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/07 16:35:56 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/07 17:43:12 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	main(int argc, char **argv, char **envp)
 		outfile = open_file(argv[argc - 1], WRITE);
 		if (infile == -1 || outfile == -1)
 			perror_exit("open_file:");
-		//dup2(infile, STDIN_FILENO);
-		//dup2(outfile, STDOUT_FILENO);
+		dup2(infile, STDIN_FILENO);
+		dup2(outfile, STDOUT_FILENO);
 		pipe_and_fork(argv[2], envp);
 	}
 	return (0);
@@ -49,7 +49,7 @@ static int	open_file(char *file, int mode)
 		return (open(file, O_RDONLY));
 	}
 	else if (mode == WRITE)
-		return (open(file, O_WRONLY | O_CREAT, 0777));
+		return (open(file, O_CREAT | O_WRONLY | O_TRUNC, 0777));
 	return (-1);
 }
 
@@ -66,10 +66,10 @@ static int	open_file(char *file, int mode)
 void	pipe_and_fork(char *command, char **envp)
 {
 	pid_t	pid;
-	/*int		fd[2];
+	int		fd[2];
 
 	if (pipe(fd) == -1)
-		perror_exit("pipe in read_command");*/
+		perror_exit("pipe in read_command");
 	pid = fork();
 	if (pid == -1)
 		perror_exit("fork in read_command");
@@ -93,14 +93,23 @@ void	pipe_and_fork(char *command, char **envp)
 void	exec_cmd(char *command, char **envp)
 {
 	char	**cmd_args;
+	char	*cmd_path;
 
 	cmd_args = ft_split(command, ' ');
-	execve(get_cmd_path(command, envp), cmd_args, envp);
+	cmd_path = get_cmd_path(cmd_args[0], envp);
+
+	int	i = 0;
+	while(cmd_args[i])
+	{
+		printf("cmd arg %d: %s\n", i, cmd_args[i]);
+		i++;
+	}
+
+	execve(cmd_path, cmd_args, envp);
 }
 
 /* 	get_cmd_path: gets PATH from envp and iterate through searchable directories
-	returning the appropriate one. Upon failure, return the command passed as
-	argument.
+	returning the appropriate one.
 */
 
 char	*get_cmd_path(char *command, char **envp)
@@ -124,7 +133,8 @@ char	*get_cmd_path(char *command, char **envp)
 		free(full_cmd);
 		i++;
 	}
-	return(command);
+	perror_exit("Invalid command");
+	return(0);
 }
 
 
