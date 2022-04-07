@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/04/01 16:56:45 by viferrei         ###   ########.fr        #
+#    Updated: 2022/04/07 13:34:28 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ LIBFT 		= $(LIBFT_DIR)/libft.a
 SRCDIR	= ./srcs/
 OBJDIR	= ./objs/
 
-SRC		= pipex.c
+SRC		= pipex.c \
+			utils.c
 OBJ		= $(addprefix $(OBJDIR), $(notdir $(SRC:.c=.o)))
 
 all: $(NAME)

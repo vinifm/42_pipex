@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/06 18:48:51 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/07 13:42:38 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,29 +96,36 @@ void	exec_cmd(char *command, char **envp)
 	char	*cmd_path;
 
 	cmd_path = get_cmd_path(command, envp);
-
-	//printf("command: %s\n", command);
-	write(1, command, ft_strlen(command));
-	execve("/bin/ls", argvec, envp);
+	execve("bin/ls", argvec, envp);
 }
+
+/* 	get_cmd_path: gets PATH from envp and iterates through searchable directories
+	returning the appropriate one.
+*/
 
 char	*get_cmd_path(char *command, char **envp)
 {
 	int		i;
-	char	*path;
+	char	**path_dirs;
+	char	*full_cmd;
 
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
-	path = envp[i];
+	path_dirs = ft_split(ft_strchr(envp[i], envp[i][5]), ':');
 
-	printf("%s\n", command);
-	printf("%s\n", envp[i]);
-	return(path);
+	printf("%s\n\n", command);
+	int n = 0;
+	while (path_dirs[n])
+	{
+		full_cmd = ft_strjoin3(path_dirs[n], "/", command);
+		printf("dir %d = %s\n", n, full_cmd);
+		free(full_cmd);
+		n++;
+	}
+
+	return(0);
 }
 
-void	perror_exit(char *error_msg)
-{
-	perror(error_msg);
-	exit(1);
-}
+
+
