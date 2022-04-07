@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/07 13:42:38 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/07 16:35:56 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,15 @@ void	pipe_and_fork(char *command, char **envp)
 
 void	exec_cmd(char *command, char **envp)
 {
-	char	*argvec[] = {command, NULL};
-	char	*cmd_path;
+	char	**cmd_args;
 
-	cmd_path = get_cmd_path(command, envp);
-	execve("bin/ls", argvec, envp);
+	cmd_args = ft_split(command, ' ');
+	execve(get_cmd_path(command, envp), cmd_args, envp);
 }
 
-/* 	get_cmd_path: gets PATH from envp and iterates through searchable directories
-	returning the appropriate one.
+/* 	get_cmd_path: gets PATH from envp and iterate through searchable directories
+	returning the appropriate one. Upon failure, return the command passed as
+	argument.
 */
 
 char	*get_cmd_path(char *command, char **envp)
@@ -114,17 +114,17 @@ char	*get_cmd_path(char *command, char **envp)
 		i++;
 	path_dirs = ft_split(ft_strchr(envp[i], envp[i][5]), ':');
 
-	printf("%s\n\n", command);
-	int n = 0;
-	while (path_dirs[n])
+	i = 0;
+	while (path_dirs[i])
 	{
-		full_cmd = ft_strjoin3(path_dirs[n], "/", command);
-		printf("dir %d = %s\n", n, full_cmd);
+		full_cmd = ft_strjoin3(path_dirs[i], "/", command);
+		//printf("dir %d = %s\n", i, full_cmd);
+		if (!(access(full_cmd, F_OK | X_OK)))
+			return(full_cmd);
 		free(full_cmd);
-		n++;
+		i++;
 	}
-
-	return(0);
+	return(command);
 }
 
 
