@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/07 17:43:12 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/12 18:07:47 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@ int	main(int argc, char **argv, char **envp)
 	int	infile;
 	int	outfile;
 
+/*
+	int i = 0;
+	while (argv[i])
+	{
+		ft_printf("argv[%d]: %s\n", i, argv[i]);
+		i++;
+	}
+*/
+
 	if (argc != 5)
 		perror_exit("Invalid number of arguments");
 	else
@@ -29,8 +38,8 @@ int	main(int argc, char **argv, char **envp)
 		if (infile == -1 || outfile == -1)
 			perror_exit("open_file:");
 		dup2(infile, STDIN_FILENO);
-		dup2(outfile, STDOUT_FILENO);
-		pipe_and_fork(argv[2], envp);
+		//dup2(outfile, STDOUT_FILENO);
+		pipe_and_fork(argv, envp);
 	}
 	return (0);
 }
@@ -53,17 +62,13 @@ static int	open_file(char *file, int mode)
 	return (-1);
 }
 
-/*	pipe_and_fork: Create a pipe and fork the process. On the parent process,
-	close the read end of the pipe and redirect STDOUT to the writing end. On
-	the child process, close the writing end and redirect STDIN to the reading
-	end.
+/*	pipe_and_fork: Create a pipe and fork the process. On the child process,
+	close the read end of the pipe and redirect STDOUT to the writing end; STDIN
+	remains infile. On the parent process, close the writing end and redirect
+	STDIN to the pipe fd; since it's piped, STDOUT remains outfile.
 */
 
-/*	NOTE 05/04: commented pipe cause it's not making a difference. Does not work
-	if uncomment dup2(fd[1], STDOUT_FILENO).
-*/
-
-void	pipe_and_fork(char *command, char **envp)
+void	pipe_and_fork(char **argv, char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -75,15 +80,17 @@ void	pipe_and_fork(char *command, char **envp)
 		perror_exit("fork in read_command");
 	if (pid == 0)
 	{
-		//close(fd[0]);
+		close(fd[0]);
 		//dup2(fd[1], STDOUT_FILENO);
-		exec_cmd(command, envp);
+		exec_cmd(argv[2], envp);
+		close(fd[1]);
 	}
 	else
 	{
-		//close(fd[1]);
-		//dup2(fd[0], STDIN_FILENO);
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
 		waitpid(-1, NULL, WNOHANG);
+		exec_cmd(argv[3], envp);
 	}
 }
 
@@ -96,16 +103,17 @@ void	exec_cmd(char *command, char **envp)
 	char	*cmd_path;
 
 	cmd_args = ft_split(command, ' ');
-	cmd_path = get_cmd_path(cmd_args[0], envp);
 
-	int	i = 0;
-	while(cmd_args[i])
+	int i = 0;
+	while (cmd_args[i])
 	{
-		printf("cmd arg %d: %s\n", i, cmd_args[i]);
+		ft_printf("cmd_args[%d]: %s\n", i, cmd_args[i]);
 		i++;
 	}
+	ft_printf("\n");
 
-	execve(cmd_path, cmd_args, envp);
+	cmd_path = get_cmd_path(cmd_args[0], envp);
+	//execve(cmd_path, cmd_args, envp);
 }
 
 /* 	get_cmd_path: gets PATH from envp and iterate through searchable directories
@@ -122,20 +130,15 @@ char	*get_cmd_path(char *command, char **envp)
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	path_dirs = ft_split(ft_strchr(envp[i], envp[i][5]), ':');
-
 	i = 0;
 	while (path_dirs[i])
 	{
 		full_cmd = ft_strjoin3(path_dirs[i], "/", command);
-		//printf("dir %d = %s\n", i, full_cmd);
 		if (!(access(full_cmd, F_OK | X_OK)))
 			return(full_cmd);
 		free(full_cmd);
 		i++;
 	}
-	perror_exit("Invalid command");
-	return(0);
+	write(2, "Invalid command\n", 16);
+	exit(1);
 }
-
-
-
