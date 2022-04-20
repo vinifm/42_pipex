@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/04/12 14:37:52 by viferrei         ###   ########.fr        #
+#    Updated: 2022/04/20 15:40:56 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ SRCDIR	= ./srcs/
 OBJDIR	= ./objs/
 
 SRC		= pipex.c \
-			utils.c
+			utils.c \
+			split.c
 OBJ		= $(addprefix $(OBJDIR), $(notdir $(SRC:.c=.o)))
 
 all: $(NAME)

@@ -6,13 +6,20 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/12 18:07:47 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/20 15:49:47 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-static int	open_file(char *file, int mode);
+//static int	open_file(char *file, int mode);
+
+//TESTAR DEPOIS
+int main()
+{
+	size_t n = ft_split_cmdcount("tr 'hey ' x", 0);
+	printf("%zu\n", n);
+}
 
 /* dup2 redirects stdin (fd == 0) and stdout (fd == 1) to infile and outfile */
 int	main(int argc, char **argv, char **envp)
@@ -49,6 +56,7 @@ int	main(int argc, char **argv, char **envp)
 	opened with writing permission or created with 0777 permissions if
 	nonexistent (O_CREAT).
 */
+
 static int	open_file(char *file, int mode)
 {
 	if (mode == READ)
