@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 15:14:47 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/20 15:39:15 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/22 15:09:40 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ size_t	find_delimiter(char const *s, size_t i)
 	if (s[i] == 34 || s[i] == 39)
 	{
 		i++;
-		while (s[i] != 34 || s[i] != 39)
+		while (s[i] != 34 && s[i] != 39)
 			i++;
 	}
 	return (i);
