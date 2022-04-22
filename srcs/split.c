@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 15:14:47 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 15:09:40 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/22 18:34:31 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	ft_split_cmdcount(char const *s, char c)
 	while (1)
 	{
 		if (s[i] == 0)
-			break;
+			break ;
 		if (s[i] != c)
 		{
 			count++;
@@ -54,29 +54,43 @@ size_t	find_delimiter(char const *s, size_t i)
 
 char	**ft_split_cmd(char const *s, char c)
 {
-	size_t		len;
 	size_t		index;
-	const char	*start;
+	size_t		i;
+	size_t		start;
 	char		**split;
 
 	split = (char **) malloc(((ft_split_cmdcount(s, c)) + 1) * sizeof(*split));
 	if (!split)
 		return (0);
 	index = 0;
-	while (*s != '\0')
+	i = 0;
+	while (s[i] != 0)
 	{
-		while (*s && *s == c)
-			s++;
-		start = s;
-		len = 0;
-		while (*s && *s != c)
+		while (s[i] && s[i] == c)
+			i++;
+		start = i;
+		while (s[i] && s[i] != c)
 		{
-			s++;
-			len++;
+			// i = split_delimiter(s, i, split);
+			i++;
 		}
-		if (*(s - 1) != c)
-			split[index++] = ft_substr(start, 0, len);
+		if (s[i - 1] != c)
+			split[index++] = ft_substr(&s[start], 0, i - start);
 	}
 	split[index] = 0;
 	return (split);
 }
+
+// size_t	split_delimiter(char const *s, size_t i, char **split)
+// {
+// 	size_t	start;
+
+// 	if (s[i] == 34 || s[i] == 39)
+// 	{
+// 		i++;
+// 		while (s[i] != 34 && s[i] != 39)
+// 			i++;
+// 	}
+// 	split[index++] = ft_substr(start + 1, 0, i - start - 1);
+// 	return (i);
+// }
