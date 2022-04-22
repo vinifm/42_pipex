@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 16:19:24 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/22 19:09:10 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,15 +104,30 @@ void	pipe_and_fork(char **argv, char **envp)
 void	exec_cmd(char *command, char **envp)
 {
 	char	**cmd_args;
+	char	**delim_args;
 	char	*cmd_path;
+	size_t	i;
+	int		delim;
 
-	cmd_args = ft_split(command, ' ');
-
-	int i = 0;
-	while (cmd_args[i])
+	i = 0;
+	delim = find_delimiter(command);
+	if (delim)
 	{
-		ft_printf("cmd_args[%d]: %s\n", i, cmd_args[i]);
-		i++;
+		delim_args = ft_split(command, delim);
+		while(delim_args[i])
+		{
+			cmd_args = ft_split(delim_args[i], ' ');
+			i++;
+		}
+	}
+	else
+		cmd_args = ft_split(command, ' ');
+
+	int j = 0;
+	while (cmd_args[j])
+	{
+		ft_printf("cmd_args[%d]: %s\n", j, cmd_args[j]);
+		j++;
 	}
 	ft_printf("\n");
 

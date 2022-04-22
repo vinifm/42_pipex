@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 16:15:02 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/22 18:55:47 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ char	*ft_strjoin3(char const *s1, char const *s2, char const *s3);
 char	**ft_double_split(char const *s, char c, char b);
 
 // pipex.h
+
+// split.c
 size_t	ft_split_cmdcount(char const *s, char c);
-size_t	find_delimiter(char const *s, size_t i);
 char	**ft_split_cmd(char const *s, char c);
-size_t	split_delimiter(char const *s, size_t i, char **split);
+size_t	jump_delimiter(char const *s, size_t i);
+int		find_delimiter(char *command);
 
 #endif
