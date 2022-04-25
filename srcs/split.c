@@ -6,21 +6,20 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 15:14:47 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 14:58:40 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:16:55 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-t_split	*init_split(char const *s, char c)
+t_split	*init_split(void)
 {
 	t_split	*split;
 
 	split = malloc(sizeof(t_split));
-	split->arr = (char **) malloc(((ft_split_cmdcount(s, c)) + 1) \
-		* sizeof(*split));;
-	if (!split || !split->arr)
-		perror("split allocation");
+	if (!split)
+		perror("split init");
+	split->arr = NULL;
 	split->index = 0;
 	split->i = 0;
 	split->start = 0;
@@ -28,7 +27,7 @@ t_split	*init_split(char const *s, char c)
 	return(split);
 }
 
-static size_t	jump_delimiter(char const *s, size_t i)
+static size_t	jump_quotes(char const *s, size_t i)
 {
 	if (s[i] == 34 || s[i] == 39)
 	{
@@ -62,7 +61,7 @@ size_t	ft_split_cmdcount(char const *s, char c)
 			count++;
 			while (s[i] != 0 && s[i] != c)
 			{
-				i = jump_delimiter(s, i);
+				i = jump_quotes(s, i);
 				i++;
 			}
 		}
@@ -72,12 +71,13 @@ size_t	ft_split_cmdcount(char const *s, char c)
 	return (count);
 }
 
-
-char	**ft_split_cmd(char const *s, char c)
+char	**ft_split_cmd(t_split *split, char const *s, char c)
 {
-	t_split		*split;
 
-	split = init_split(s, c);
+	split->arr = (char **) malloc(((ft_split_cmdcount(s, c)) + 1) \
+		* sizeof(*split));
+	if(!split->arr)
+		perror("split array");
 	while (s[split->i])
 	{
 		jump_space(split, s, c);
@@ -85,7 +85,7 @@ char	**ft_split_cmd(char const *s, char c)
 		{
 			if (s[split->i] && (s[split->i] == 34 || s[split->i] == 39))
 			{
-				split->i = (jump_delimiter(s, split->i) + 1);
+				split->i = (jump_quotes(s, split->i) + 1);
 				split->arr[split->index++] = ft_substr(&s[split->start], 0, \
 				split->i - split->start);
 				jump_space(split, s, c);
@@ -99,20 +99,4 @@ char	**ft_split_cmd(char const *s, char c)
 	}
 	split->arr[split->index] = 0;
 	return (split->arr);
-}
-
-/*	find_delimiter: reads the string and returns 34 if " is found or 39 if ' is
-	found; or 0 if none is found.
-*/
-int	find_delimiter(char *command)
-{
-	size_t	i;
-	i = 0;
-	while (command[i] && command[i] != 34 && command[i] != 39)
-		i++;
-	if (command[i] == 34)
-		return(34);
-	if (command[i] == 39)
-		return(39);
-	return(0);
 }

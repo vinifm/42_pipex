@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 13:50:55 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 15:14:05 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 		if (infile == -1 || outfile == -1)
 			perror_exit("open_file:");
 		dup2(infile, STDIN_FILENO);
-		//dup2(outfile, STDOUT_FILENO);
+		dup2(outfile, STDOUT_FILENO);
 		pipe_and_fork(argv, envp);
 	}
 	return (0);
@@ -82,7 +82,7 @@ void	pipe_and_fork(char **argv, char **envp)
 	if (pid == 0)
 	{
 		close(fd[0]);
-		//dup2(fd[1], STDOUT_FILENO);
+		dup2(fd[1], STDOUT_FILENO);
 		exec_cmd(argv[2], envp);
 		close(fd[1]);
 	}
@@ -95,15 +95,15 @@ void	pipe_and_fork(char **argv, char **envp)
 	}
 }
 
-/*	exec_cmd:
-*/
-
 void	exec_cmd(char *command, char **envp)
 {
 	char	**cmd_args;
 	char	*cmd_path;
+	t_split	*split;
 
-	cmd_args = ft_split_cmd(command, ' ');
+	split = init_split();
+	cmd_args = ft_split_cmd(split, command, ' ');
+	free(split);
 
 	int j = 0;
 	while (cmd_args[j])
@@ -114,7 +114,7 @@ void	exec_cmd(char *command, char **envp)
 	ft_printf("\n");
 
 	cmd_path = get_cmd_path(cmd_args[0], envp);
-	//execve(cmd_path, cmd_args, envp);
+	execve(cmd_path, cmd_args, envp);
 }
 
 /* 	get_cmd_path: gets PATH from envp and iterate through searchable directories
