@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 15:14:05 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:38:24 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,16 @@ int	main(int argc, char **argv, char **envp)
 	int	infile;
 	int	outfile;
 
-/*
-	int i = 0;
-	while (argv[i])
-	{
-		ft_printf("argv[%d]: %s\n", i, argv[i]);
-		i++;
-	}
-*/
-
 	if (argc != 5)
-		perror_exit("Invalid number of arguments");
+		perror_exit("Invalid number of arguments", 1);
 	else
 	{
 		infile = open_file(argv[1], READ);
 		outfile = open_file(argv[argc - 1], WRITE);
-		if (infile == -1 || outfile == -1)
-			perror_exit("open_file:");
+		if (infile == -1)
+			perror_exit("infile", 0);
+		if (outfile == -1)
+			perror_exit("outfile", 1);
 		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
 		pipe_and_fork(argv, envp);
@@ -55,7 +48,7 @@ static int	open_file(char *file, int mode)
 	if (mode == READ)
 	{
 		if (access(file, F_OK))
-			perror_exit("input file");
+			perror_exit("input file", 1);
 		return (open(file, O_RDONLY));
 	}
 	else if (mode == WRITE)
@@ -75,10 +68,10 @@ void	pipe_and_fork(char **argv, char **envp)
 	int		fd[2];
 
 	if (pipe(fd) == -1)
-		perror_exit("pipe in read_command");
+		perror_exit("pipe in read_command", 1);
 	pid = fork();
 	if (pid == -1)
-		perror_exit("fork in read_command");
+		perror_exit("fork in read_command", 1);
 	if (pid == 0)
 	{
 		close(fd[0]);
@@ -104,15 +97,6 @@ void	exec_cmd(char *command, char **envp)
 	split = init_split();
 	cmd_args = ft_split_cmd(split, command, ' ');
 	free(split);
-
-	int j = 0;
-	while (cmd_args[j])
-	{
-		ft_printf("cmd_args[%d]: %s\n", j, cmd_args[j]);
-		j++;
-	}
-	ft_printf("\n");
-
 	cmd_path = get_cmd_path(cmd_args[0], envp);
 	execve(cmd_path, cmd_args, envp);
 }
@@ -136,10 +120,11 @@ char	*get_cmd_path(char *command, char **envp)
 	{
 		full_cmd = ft_strjoin3(path_dirs[i], "/", command);
 		if (!(access(full_cmd, F_OK | X_OK)))
-			return(full_cmd);
+			return (full_cmd);
 		free(full_cmd);
 		i++;
 	}
-	write(2, "Invalid command\n", 16);
-	exit(1);
+	write(2, command, ft_strlen(command));
+	write(2, ": command not found\n", 21);
+	exit(127);
 }

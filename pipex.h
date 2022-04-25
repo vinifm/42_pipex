@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 15:14:26 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:35:07 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,9 @@ void	exec_cmd(char *command, char **envp);
 char	*get_cmd_path(char *command, char **envp);
 
 // utils.c
-void	perror_exit(char *error_msg);
+void	perror_exit(char *error_msg, int exit_code);
 char	*ft_strjoin3(char const *s1, char const *s2, char const *s3);
-char	**ft_double_split(char const *s, char c, char b);
-
-// pipex.h
+t_split	*init_split(void);
 
 // split.c
 t_split	*init_split(void);

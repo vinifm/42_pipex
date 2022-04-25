@@ -6,16 +6,16 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 13:23:54 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 18:49:09 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:35:10 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-void	perror_exit(char *error_msg)
+void	perror_exit(char *error_msg, int exit_code)
 {
 	perror(error_msg);
-	exit(1);
+	exit(exit_code);
 }
 
 char	*ft_strjoin3(char const *s1, char const *s2, char const *s3)
@@ -27,4 +27,18 @@ char	*ft_strjoin3(char const *s1, char const *s2, char const *s3)
 	str = ft_strjoin(aux, s3);
 	free(aux);
 	return (str);
+}
+
+t_split	*init_split(void)
+{
+	t_split	*split;
+
+	split = malloc(sizeof(t_split));
+	if (!split)
+		perror("split init");
+	split->arr = NULL;
+	split->index = 0;
+	split->i = 0;
+	split->start = 0;
+	return (split);
 }
