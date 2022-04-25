@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 18:55:47 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 14:17:25 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@
 # define READ	0
 # define WRITE	1
 
+typedef struct s_split {
+	char	**arr;
+	size_t	index;
+	size_t	i;
+	size_t	start;
+}				t_split;
+
 // pipex.c
 void	pipe_and_fork(char **argv, char **envp);
 void	exec_cmd(char *command, char **envp);
@@ -38,9 +45,11 @@ char	**ft_double_split(char const *s, char c, char b);
 // pipex.h
 
 // split.c
+t_split	*init_split(char const *s, char c);
 size_t	ft_split_cmdcount(char const *s, char c);
 char	**ft_split_cmd(char const *s, char c);
-size_t	jump_delimiter(char const *s, size_t i);
 int		find_delimiter(char *command);
+
+
 
 #endif

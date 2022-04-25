@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/22 19:09:10 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 13:50:55 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	int	infile;
 	int	outfile;
-
-	size_t n = ft_split_cmdcount("tr 'hey ' x", ' ');
-	printf("%zu\n", n);
 
 /*
 	int i = 0;
@@ -104,24 +101,9 @@ void	pipe_and_fork(char **argv, char **envp)
 void	exec_cmd(char *command, char **envp)
 {
 	char	**cmd_args;
-	char	**delim_args;
 	char	*cmd_path;
-	size_t	i;
-	int		delim;
 
-	i = 0;
-	delim = find_delimiter(command);
-	if (delim)
-	{
-		delim_args = ft_split(command, delim);
-		while(delim_args[i])
-		{
-			cmd_args = ft_split(delim_args[i], ' ');
-			i++;
-		}
-	}
-	else
-		cmd_args = ft_split(command, ' ');
+	cmd_args = ft_split_cmd(command, ' ');
 
 	int j = 0;
 	while (cmd_args[j])
