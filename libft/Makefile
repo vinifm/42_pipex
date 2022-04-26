@@ -20,11 +20,8 @@ SRC		= ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c \
 			ft_printf_convert_xX_percent.c \
 			ft_printf_init_placeholder.c \
 			ft_printf.c
-BONUS_S	= ft_lstnew.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c \
-			ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c
 OBJ_DIR	= ./objs
 OBJ		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
-BONUS_O	= $(addprefix $(OBJ_DIR)/, $(BONUS_S:.c=.o))
 
 all: 		$(NAME)
 
@@ -37,12 +34,6 @@ $(OBJ_DIR):
 $(OBJ_DIR)/%.o:	%.c	$(INCLUDE)
 			$(CC) $(CFLAGS) -c $< -o $@
 
-bonus:		$(BONUS_O)
-			$(LIB) $(NAME) $(BONUS_O)
-
-.c.o:		$(INCLUDE)
-			$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
-
 clean:
 			$(RM) $(OBJ_DIR)
 
@@ -51,9 +42,7 @@ fclean: 	clean
 
 re: 		fclean all
 
-rebonus:	fclean bonus
-
-.PHONY: 	all clean fclean re bonus rebonus
+.PHONY: 	all clean fclean re
 
 run:		$(NAME)
 			$(RM) a.out
