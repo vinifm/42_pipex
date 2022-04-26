@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 21:04:49 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 20:47:35 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include <stdlib.h>
 # include <errno.h>
@@ -33,7 +33,7 @@ typedef struct s_split {
 }				t_split;
 
 // pipex.c
-void	pipe_and_fork(char **argv, char **envp);
+void	pipe_and_fork(char argv[], char **envp);
 void	exec_cmd(char *command, char **envp);
 char	*get_cmd_path(char *command, char **envp);
 

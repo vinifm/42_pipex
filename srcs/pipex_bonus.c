@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 21:16:37 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/25 21:18:41 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pipex.h"
+#include "../pipex_bonus.h"
 
 static int	open_file(char *file, int mode);
 
-/* dup2 redirects stdin (fd == 0) and stdout (fd == 1) to infile and outfile */
 int	main(int argc, char **argv, char **envp)
 {
 	int	infile;
 	int	outfile;
+	int	i;
 
-	if (argc != 5)
+	i = 2;
+	if (argc < 5)
 		perror_exit("Invalid number of arguments", 1);
 	else
 	{
@@ -32,16 +33,12 @@ int	main(int argc, char **argv, char **envp)
 			perror_exit("outfile", 1);
 		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
-		pipe_and_fork(argv, envp);
+		while (i < argc - 2)
+			pipe_and_fork(argv[i++], envp);
+		exec_cmd(argv[i], envp);
 	}
 	return (0);
 }
-
-/*	open_file opens the input and output file (or creates it if need be).
-	The input file is opened with reading permission. The output file is
-	opened with writing permission or created with 0777 permissions if
-	nonexistent (O_CREAT).
-*/
 
 static int	open_file(char *file, int mode)
 {
@@ -56,13 +53,7 @@ static int	open_file(char *file, int mode)
 	return (-1);
 }
 
-/*	pipe_and_fork: Create a pipe and fork the process. On the child process,
-	close the read end of the pipe and redirect STDOUT to the writing end; STDIN
-	remains infile. On the parent process, close the writing end and redirect
-	STDIN to the pipe fd; since it's piped, STDOUT remains outfile.
-*/
-
-void	pipe_and_fork(char **argv, char **envp)
+void	pipe_and_fork(char argv[], char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -76,7 +67,7 @@ void	pipe_and_fork(char **argv, char **envp)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
-		exec_cmd(argv[2], envp);
+		exec_cmd(argv, envp);
 		close(fd[1]);
 	}
 	else
@@ -84,7 +75,6 @@ void	pipe_and_fork(char **argv, char **envp)
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 		waitpid(-1, NULL, WNOHANG);
-		exec_cmd(argv[3], envp);
 	}
 }
 
@@ -100,10 +90,6 @@ void	exec_cmd(char *command, char **envp)
 	cmd_path = get_cmd_path(cmd_args[0], envp);
 	execve(cmd_path, cmd_args, envp);
 }
-
-/* 	get_cmd_path: gets PATH from envp and iterate through searchable directories
-	returning the appropriate one.
-*/
 
 char	*get_cmd_path(char *command, char **envp)
 {
