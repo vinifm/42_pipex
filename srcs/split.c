@@ -6,28 +6,33 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 15:14:47 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 19:54:58 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:03:24 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-static size_t	jump_quotes(char const *s, size_t i)
+char	**ft_split_cmd(t_split *split, char const *s, char c)
 {
-	if (s[i] == 34 || s[i] == 39)
+	split->arr = (char **) malloc(((ft_split_cmdcount(s, c)) + 1) \
+		* sizeof(*split));
+	if (!split->arr)
+		perror("split array");
+	while (s[split->i])
 	{
-		i++;
-		while (s[i] != 34 && s[i] != 39)
-			i++;
-	}
-	return (i);
-}
-
-static void	jump_space(t_split *split, char const *s, char c)
-{
-	while (s[split->i] && s[split->i] == c)
+		jump_space(split, s, c);
+		while (s[split->i] && s[split->i] != c)
+		{
+			split_quotes(split, s, c);
 			split->i++;
-	split->start = split->i;
+		}
+		if (s[split->i - 1] != c && s[split->i - 1] != 34
+			&& s[split->i - 1] != 39)
+			split->arr[split->index++] = ft_substr(&s[split->start], 0, \
+				split->i - split->start);
+	}
+	split->arr[split->index] = 0;
+	return (split->arr);
 }
 
 size_t	ft_split_cmdcount(char const *s, char c)
@@ -68,25 +73,20 @@ void	split_quotes(t_split *split, char const *s, char c)
 	}
 }
 
-char	**ft_split_cmd(t_split *split, char const *s, char c)
+static size_t	jump_quotes(char const *s, size_t i)
 {
-	split->arr = (char **) malloc(((ft_split_cmdcount(s, c)) + 1) \
-		* sizeof(*split));
-	if (!split->arr)
-		perror("split array");
-	while (s[split->i])
+	if (s[i] == 34 || s[i] == 39)
 	{
-		jump_space(split, s, c);
-		while (s[split->i] && s[split->i] != c)
-		{
-			split_quotes(split, s, c);
-			split->i++;
-		}
-		if (s[split->i - 1] != c && s[split->i - 1] != 34
-			&& s[split->i - 1] != 39)
-			split->arr[split->index++] = ft_substr(&s[split->start], 0, \
-				split->i - split->start);
+		i++;
+		while (s[i] != 34 && s[i] != 39)
+			i++;
 	}
-	split->arr[split->index] = 0;
-	return (split->arr);
+	return (i);
+}
+
+static void	jump_space(t_split *split, char const *s, char c)
+{
+	while (s[split->i] && s[split->i] == c)
+			split->i++;
+	split->start = split->i;
 }
