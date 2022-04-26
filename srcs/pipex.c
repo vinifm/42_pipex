@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 22:02:06 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:47:44 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,12 @@ void	pipe_and_fork(char **argv, char **envp)
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
 		exec_cmd(argv[2], envp);
-		close(fd[1]);
 	}
 	else
 	{
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		waitpid(-1, NULL, WNOHANG);
+		waitpid(-1, NULL, 0);
 		exec_cmd(argv[3], envp);
 	}
 }
