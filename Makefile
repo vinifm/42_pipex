@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/04/26 15:02:35 by viferrei         ###   ########.fr        #
+#    Updated: 2022/04/26 22:09:46 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,11 @@ RM			= rm -rf
 CFLAGS		= -Wall -Wextra -Werror
 LIBFT_DIR	= ./libft
 LIBFT 		= $(LIBFT_DIR)/libft.a
+LFLAGS		= --leak-check=full \
+				--show-leak-kinds=all \
+				--trace-children=yes \
+				--track-origins=yes \
+				./pipex infile "gdasds" "tdasda" outfile
 
 SRCDIR	= ./srcs/
 OBJDIR	= ./objs/
@@ -56,5 +61,8 @@ bonus: $(LIBFT) $(OBJ_BONUS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ_BONUS) $(LIBFT)
 
 rebonus: fclean bonus
+
+leaks:
+	valgrind $(LFLAGS)
 
 .PHONY: all clean fclean re bonus rebonus

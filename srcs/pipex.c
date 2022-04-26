@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 14:14:35 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 22:02:06 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,7 @@ void	exec_cmd(char *command, char **envp)
 
 	split = init_split();
 	cmd_args = ft_split_cmd(split, command, ' ');
-	free(split);
-	cmd_path = get_cmd_path(cmd_args[0], envp);
+	cmd_path = get_cmd_path(split, cmd_args[0], envp);
 	execve(cmd_path, cmd_args, envp);
 }
 
@@ -103,7 +102,7 @@ void	exec_cmd(char *command, char **envp)
 	returning the appropriate one.
 */
 
-char	*get_cmd_path(char *command, char **envp)
+char	*get_cmd_path(t_split *split, char *command, char **envp)
 {
 	int		i;
 	char	**path_dirs;
@@ -124,5 +123,6 @@ char	*get_cmd_path(char *command, char **envp)
 	}
 	write(2, command, ft_strlen(command));
 	write(2, ": command not found\n", 21);
+	free_cmds(split, path_dirs);
 	exit(127);
 }
