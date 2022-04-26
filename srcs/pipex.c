@@ -6,13 +6,11 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 21:16:37 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:14:35 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
-
-static int	open_file(char *file, int mode);
 
 /* dup2 redirects stdin (fd == 0) and stdout (fd == 1) to infile and outfile */
 int	main(int argc, char **argv, char **envp)
@@ -43,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 	nonexistent (O_CREAT).
 */
 
-static int	open_file(char *file, int mode)
+int	open_file(char *file, int mode)
 {
 	if (mode == READ)
 	{

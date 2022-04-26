@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/04/25 21:20:49 by viferrei         ###   ########.fr        #
+#    Updated: 2022/04/26 14:35:18 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,14 +39,11 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
 
-$(NAME_BONUS): $(LIBFT) $(OBJ_BONUS)
-	$(CC) $(CFLAGS) -o $(NAME_BONUS) $(OBJ_BONUS) $(LIBFT)
-
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJDIR)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean
@@ -55,17 +52,9 @@ fclean: clean
 
 re: fclean all
 
-bonus: $(NAME_BONUS)
+bonus: $(LIBFT) $(OBJ_BONUS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ_BONUS) $(LIBFT)
 
-cleanb:
-	$(RM) $(OBJ_BONUS)
-	make clean -C $(LIBFT_DIR)
+rebonus: fclean bonus
 
-fcleanb: cleanb
-	$(RM) $(NAME_BONUS)
-	make fclean -C $(LIBFT_DIR)
-
-rebonus: fcleanb
-	make bonus
-
-.PHONY: all clean fclean re bonus cleanb fcleanb rebonus
+.PHONY: all clean fclean re bonus rebonus

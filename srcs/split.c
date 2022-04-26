@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 15:14:47 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 14:03:24 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:13:15 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	split_quotes(t_split *split, char const *s, char c)
 	}
 }
 
-static size_t	jump_quotes(char const *s, size_t i)
+size_t	jump_quotes(char const *s, size_t i)
 {
 	if (s[i] == 34 || s[i] == 39)
 	{
@@ -84,7 +84,7 @@ static size_t	jump_quotes(char const *s, size_t i)
 	return (i);
 }
 
-static void	jump_space(t_split *split, char const *s, char c)
+void	jump_space(t_split *split, char const *s, char c)
 {
 	while (s[split->i] && s[split->i] == c)
 			split->i++;

@@ -6,13 +6,11 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/25 21:18:41 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/26 14:15:50 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex_bonus.h"
-
-static int	open_file(char *file, int mode);
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -40,7 +38,7 @@ int	main(int argc, char **argv, char **envp)
 	return (0);
 }
 
-static int	open_file(char *file, int mode)
+int	open_file(char *file, int mode)
 {
 	if (mode == READ)
 	{
