@@ -6,7 +6,7 @@
 #    By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/21 15:59:03 by viferrei          #+#    #+#              #
-#    Updated: 2022/04/26 22:16:17 by viferrei         ###   ########.fr        #
+#    Updated: 2022/04/28 15:13:26 by viferrei         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ LFLAGS		= --leak-check=full \
 				--show-leak-kinds=all \
 				--trace-children=yes \
 				--track-origins=yes \
+				--track-fds=yes \
 				./pipex infile "gdasds" "tdasda" outfile
 
 SRCDIR	= ./srcs/
