@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 22:02:02 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:36:08 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ int	main(int argc, char **argv, char **envp)
 	{
 		infile = open_file(argv[1], READ);
 		outfile = open_file(argv[argc - 1], WRITE);
-		if (infile == -1)
-			perror_exit("infile", 0);
 		if (outfile == -1)
 			perror_exit("outfile", 1);
 		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
+		if (infile == -1)
+			i++;
 		while (i < argc - 2)
 			pipe_and_fork(argv[i++], envp);
 		exec_cmd(argv[i], envp);
@@ -43,7 +43,10 @@ int	open_file(char *file, int mode)
 	if (mode == READ)
 	{
 		if (access(file, F_OK))
-			perror_exit("input file", 1);
+		{
+			write(2, file, ft_strlen(file));
+			write(2, ": No such file or directory\n", 29);
+		}
 		return (open(file, O_RDONLY));
 	}
 	else if (mode == WRITE)

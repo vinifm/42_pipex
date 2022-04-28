@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 22:02:53 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:27:03 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_split {
 
 // pipex.c
 int		open_file(char *file, int mode);
-void	pipe_and_fork(char **argv, char **envp);
+void	pipe_and_fork(char argv[], char **envp);
 void	exec_cmd(char *command, char **envp);
 char	*get_cmd_path(t_split *split, char *command, char **envp);
 

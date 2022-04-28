@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 18:47:44 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:34:17 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int	main(int argc, char **argv, char **envp)
 	{
 		infile = open_file(argv[1], READ);
 		outfile = open_file(argv[argc - 1], WRITE);
-		if (infile == -1)
-			perror_exit("infile", 0);
 		if (outfile == -1)
 			perror_exit("outfile", 1);
 		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
-		pipe_and_fork(argv, envp);
+		if (infile != -1)
+			pipe_and_fork(argv[2], envp);
+		exec_cmd(argv[3], envp);
 	}
 	return (0);
 }
@@ -46,7 +46,10 @@ int	open_file(char *file, int mode)
 	if (mode == READ)
 	{
 		if (access(file, F_OK))
-			perror_exit("input file", 1);
+		{
+			write(2, file, ft_strlen(file));
+			write(2, ": No such file or directory\n", 29);
+		}
 		return (open(file, O_RDONLY));
 	}
 	else if (mode == WRITE)
@@ -60,7 +63,7 @@ int	open_file(char *file, int mode)
 	STDIN to the pipe fd; since it's piped, STDOUT remains outfile.
 */
 
-void	pipe_and_fork(char **argv, char **envp)
+void	pipe_and_fork(char argv[], char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -74,14 +77,13 @@ void	pipe_and_fork(char **argv, char **envp)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
-		exec_cmd(argv[2], envp);
+		exec_cmd(argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
 		waitpid(-1, NULL, 0);
-		exec_cmd(argv[3], envp);
 	}
 }
 
