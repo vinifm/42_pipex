@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/28 14:36:08 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 18:12:35 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	int	infile;
 	int	outfile;
+	int	fd[2];
 	int	i;
 
 	i = 2;
@@ -23,16 +24,18 @@ int	main(int argc, char **argv, char **envp)
 		perror_exit("Invalid number of arguments", 1);
 	else
 	{
+		if (pipe(fd) == -1)
+			perror_exit("pipe in read_command", 1);
 		infile = open_file(argv[1], READ);
 		outfile = open_file(argv[argc - 1], WRITE);
 		if (outfile == -1)
 			perror_exit("outfile", 1);
-		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
+		close(outfile);
 		if (infile == -1)
 			i++;
 		while (i < argc - 2)
-			pipe_and_fork(argv[i++], envp);
+			ft_infile(infile, fd, argv[i++], envp);
 		exec_cmd(argv[i], envp);
 	}
 	return (0);
@@ -54,13 +57,10 @@ int	open_file(char *file, int mode)
 	return (-1);
 }
 
-void	pipe_and_fork(char argv[], char **envp)
+void	pipe_and_fork(char argv[], char **envp, int fd[2])
 {
 	pid_t	pid;
-	int		fd[2];
 
-	if (pipe(fd) == -1)
-		perror_exit("pipe in read_command", 1);
 	pid = fork();
 	if (pid == -1)
 		perror_exit("fork in read_command", 1);
@@ -68,14 +68,15 @@ void	pipe_and_fork(char argv[], char **envp)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
-		exec_cmd(argv, envp);
 		close(fd[1]);
+		exec_cmd(argv, envp);
 	}
 	else
 	{
 		close(fd[1]);
 		dup2(fd[0], STDIN_FILENO);
-		waitpid(-1, NULL, WNOHANG);
+		close(fd[0]);
+		waitpid(-1, NULL, 0);
 	}
 }
 

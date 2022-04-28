@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 13:23:54 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/26 22:00:24 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 18:10:46 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,20 @@ void	free_cmds(t_split *split, char **path_dirs)
 		free(split->arr[i++]);
 	free(split->arr);
 	free(split);
+}
+
+void	ft_infile(int infile, int fd[2], char argv[], char **envp)
+{
+	if (infile < 0)
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		pipe_and_fork(argv, envp, fd);
+	}
+	else
+	{
+		dup2(infile, STDIN_FILENO);
+		close(infile);
+		pipe_and_fork(argv, envp, fd);
+	}
 }
