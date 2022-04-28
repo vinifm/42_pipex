@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/28 14:34:17 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 16:55:45 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,21 @@ int	main(int argc, char **argv, char **envp)
 {
 	int	infile;
 	int	outfile;
+	int	fd[2];
 
 	if (argc != 5)
 		perror_exit("Invalid number of arguments", 1);
 	else
 	{
+		if (pipe(fd) == -1)
+			perror_exit("pipe in read_command", 1);
 		infile = open_file(argv[1], READ);
 		outfile = open_file(argv[argc - 1], WRITE);
 		if (outfile == -1)
 			perror_exit("outfile", 1);
-		dup2(infile, STDIN_FILENO);
 		dup2(outfile, STDOUT_FILENO);
-		if (infile != -1)
-			pipe_and_fork(argv[2], envp);
+		close(outfile);
+		ft_infile(infile, fd, argv, envp);
 		exec_cmd(argv[3], envp);
 	}
 	return (0);
@@ -63,13 +65,10 @@ int	open_file(char *file, int mode)
 	STDIN to the pipe fd; since it's piped, STDOUT remains outfile.
 */
 
-void	pipe_and_fork(char argv[], char **envp)
+void	pipe_and_fork(char argv[], char **envp, int fd[2])
 {
 	pid_t	pid;
-	int		fd[2];
 
-	if (pipe(fd) == -1)
-		perror_exit("pipe in read_command", 1);
 	pid = fork();
 	if (pid == -1)
 		perror_exit("fork in read_command", 1);
