@@ -6,7 +6,7 @@
 /*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/21 16:05:35 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/28 18:04:16 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/04/28 18:15:42 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <errno.h>
 # include <unistd.h>
 # include <string.h>
-# include <stdio.h>
 # include <sys/types.h>
 # include <fcntl.h>
 # include <sys/wait.h>
