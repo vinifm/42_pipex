@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: viferrei <viferrei@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: viferrei <viferrei@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 14:04:13 by viferrei          #+#    #+#             */
-/*   Updated: 2022/04/28 14:36:08 by viferrei         ###   ########.fr       */
+/*   Updated: 2022/09/14 19:57:19 by viferrei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ void	pipe_and_fork(char argv[], char **envp)
 {
 	pid_t	pid;
 	int		fd[2];
-
+ß
 	if (pipe(fd) == -1)
-		perror_exit("pipe in read_command", 1);
+		perror_exit("pipe", 1);
 	pid = fork();
 	if (pid == -1)
-		perror_exit("fork in read_command", 1);
-	if (pid == 0)
+		perror_exit("fork", 1);ß
+	if (pid == 0)ß
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
